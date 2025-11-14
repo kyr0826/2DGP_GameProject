@@ -1,4 +1,5 @@
-from pico2d import Image, load_image
+from pico2d import Image, load_image, draw_rectangle
+
 
 class Volcano:
     volcano = None
@@ -31,7 +32,7 @@ class Volcano:
 
     def draw(self):
         if self.height <= 0: return
-
+        draw_rectangle(*self.get_bb(),255,0,255,255)
         src_h = int(self.height)
         offset = int(self.scroll) % self.tex_h
 
