@@ -9,7 +9,8 @@ class Character:
     def __init__(self, name, x, y, controls):
         self.name = name
 
-        self.Health = 3;
+        self.MAX_HEALTH = 150.0
+        self.Health = self.MAX_HEALTH
 
         self.pos_x,self.pos_y = x, y
         self.speed, self.x_speed, self.y_speed = 20, 0, 0
@@ -34,8 +35,10 @@ class Character:
         self.STUN_DURATION = 2.0
         self.stun_timer = 0.0
 
-        self.INVINCIBLE_DURATION = 1.0
-        self.invincible_timer = self.INVINCIBLE_DURATION
+        self.INVINCIBLE_DURATION_HIT = 0.3
+        self.INVINCIBLE_DURATION_DEFENSE = 0.1
+        self.INVINCIBLE_DURATION_Volcano = 1.0
+        self.invincible_timer = 0.0
 
         self.controls = controls
         self.animator = Animator(self)
@@ -94,7 +97,7 @@ class Character:
         jump = load_image(self.name + '/Jump.png')
         self.animator.add(States.JUMP, Animation(self, jump, jump_frame_count, jump_frame_count * 6, False))
 
-        self.animator.add(States.ATTACK, Animation(self, attack, attack_frame_count, attack_frame_count * 6, False))
+        self.animator.add(States.ATTACK, Animation(self, attack, attack_frame_count, attack_frame_count * 3, False))
         self.animator.add(States.DEFENSE, Animation(self, defense, defense_frame_count, defense_frame_count * 8, True))
         self.animator.add(States.PARRYING, Animation(self, parrying, parrying_frame_count, parrying_frame_count * 6, False))
 
@@ -204,6 +207,25 @@ class Character:
         self.just_landed = False
         self.isGrounded = False
 
+    def take_damage(self, amount, group):
+        if self.invincible_timer > 0 : return
+
+        self.Health -= amount
+        if self.Health <= 0:  # dead
+            self.Health = 0
+            self.animator.isBlinking = False
+            self.animator.isVisible = True
+            self.state_machine.change(States.DEAD)
+            return
+        if group == 'player:volcano':
+            self.invincible_timer = self.INVINCIBLE_DURATION_Volcano
+            self.animator.isBlinking = True
+        elif self.state_machine.current is States.DEFENSE:
+            self.invincible_timer = self.INVINCIBLE_DURATION_DEFENSE
+        else:
+            self.invincible_timer = self.INVINCIBLE_DURATION_HIT
+            self.animator.isBlinking = True
+
     def handle_collision(self, group, other):
         if group == 'player:map':
             is_oneway = other.type == 'one-way'
@@ -267,11 +289,13 @@ class Character:
                 return
 
             if my_state == States.DEFENSE:
+                self.take_damage(2 ,group)
                 return
 
             if my_state == States.HIT:
                 return
 
+            self.take_damage(15, group)
             self.state_machine.change(States.HIT)
             self.x_speed = other.last_dir * KNOCKBACK_SPEED
             self.y_speed = KNOCKBACK_SPEED / 2
@@ -279,22 +303,14 @@ class Character:
             self.isGrounded = False
             self.isJumping = False
             self.isBrakingJump = False
+
         elif group == 'parry:success':
             self.state_machine.change(States.STUN)
             self.stun_timer = self.STUN_DURATION
             self.x_speed = 0
         elif group == 'player:volcano':
             if self.invincible_timer != 0: return
-
-            self.Health -= 1
-            if self.Health <= 0:    # dead
-                self.animator.isBlinking = False
-                self.animator.isVisible = True
-                self.state_machine.change(States.DEAD)
-                return
-
-            self.invincible_timer = self.INVINCIBLE_DURATION
-            self.animator.isBlinking = True
+            self.take_damage(50, group)
 
     def get_attack_bb(self):
         if self.state_machine.current != States.ATTACK:
@@ -330,11 +346,26 @@ class Character:
 
         return self.pos_x-16, self.pos_y-64, self.pos_x+16, self.pos_y+16
 
+    def draw_debug_healthbar(self):
+        if self.state_machine.current is States.DEAD: return
+
+        healthbar_width = 50
+        health_rate = self.Health / self.MAX_HEALTH
+
+        left = self.pos_x - healthbar_width / 2
+        bottom = self.get_bb()[3] + 0.5
+
+        right = left + healthbar_width * health_rate
+        top = bottom + 10
+
+        draw_rectangle(left, top, right, bottom, 255,100,100,255, True)
+
     def draw(self):
         self.animator.draw_current_frame()
 
         draw_rectangle(*self.get_bb(),0,255,150,1)
         draw_rectangle(*self.get_foot_bb(),255,255,0,1)
+        self.draw_debug_healthbar()
 
         if self.state_machine.current == States.ATTACK:
             attack_bb = self.get_attack_bb()
