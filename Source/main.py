@@ -1,6 +1,6 @@
 from Character import *
 from InputManager import *
-from Source.CollisionManager import add_collision_pair, handle_collisions
+from Source.CollisionManager import add_collision_pair, add_list_collision_pair, handle_collisions
 from MapGenerator import *
 from Volcano import Volcano
 
@@ -24,10 +24,13 @@ def main():
     players = [player1, player2]
     platforms = get_platforms()
 
-    add_collision_pair('player:map',players, platforms)
-    add_collision_pair('player:player', players,players)
+    add_list_collision_pair('player:map', players, platforms)
+    add_list_collision_pair('player:player', players, players)
 
-    add_collision_pair('attack:hit', players, players)
+    add_list_collision_pair('attack:hit', players, players)
+    add_list_collision_pair('player:volcano', players, None)
+    add_collision_pair('player:volcano', None, volc)
+
     while running:
         input_mgr.update()
         running = not input_mgr.get_key_down(SDLK_ESCAPE)
