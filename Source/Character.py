@@ -275,12 +275,13 @@ class Character:
             self.state_machine.change(States.STUN)
             self.stun_timer = self.STUN_DURATION
             self.x_speed = 0
-        elif group == 'player:Volcano':
+        elif group == 'player:volcano':
             if self.invincible_timer != 0: return
 
             self.Health -= 1
             if self.Health <= 0:    # dead
                 pass
+
             self.invincible_timer = self.INVINCIBLE_DURATION
             self.animator.isBlinking = True
 
