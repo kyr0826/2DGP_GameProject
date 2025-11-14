@@ -42,9 +42,6 @@ class Character:
         self.state_machine = StateMachine(self)
         self.load_animations()
 
-        # Test용 코드
-        self.animator.isBlinking = True
-
     def load_animations(self):
         idle = load_image(self.name + '/Idle.png')
         run =  load_image(self.name + '/Run.png')
@@ -57,6 +54,8 @@ class Character:
         parrying_frame_count = 0
         jump_frame_count = 0
         hit_frame_count = 0
+        dead_frame_count = 0
+
         attack, defense, parrying, jump, hit = None, None, None, None, None
 
         if self.name == 'Fighter':
@@ -68,6 +67,7 @@ class Character:
             parrying_frame_count = 4
             jump_frame_count = 5
             hit_frame_count = 3
+            dead_frame_count = 3
 
         elif self.name == 'Samurai':
             attack = load_image(self.name + '/Attack_3.png')
@@ -78,6 +78,7 @@ class Character:
             parrying_frame_count = 6
             jump_frame_count = 7
             hit_frame_count = 2
+            dead_frame_count = 3
 
         elif self.name == 'Shinobi':
             attack = load_image(self.name + '/Attack_1.png')
@@ -88,6 +89,7 @@ class Character:
             parrying_frame_count = 4
             jump_frame_count = 6
             hit_frame_count = 2
+            dead_frame_count = 4
 
         jump = load_image(self.name + '/Jump.png')
         self.animator.add(States.JUMP, Animation(self, jump, jump_frame_count, jump_frame_count * 6, False))
@@ -98,12 +100,18 @@ class Character:
 
         hit = load_image(self.name + '/Hurt.png')
         self.animator.add(States.HIT, Animation(self, hit, hit_frame_count, hit_frame_count * 6, False))
-
         self.animator.add(States.STUN, Animation(self, hit, hit_frame_count, hit_frame_count * 6, True))
+
+        dead = load_image(self.name + '/Dead.png')
+        self.animator.add(States.DEAD, Animation(self, dead, dead_frame_count, dead_frame_count * 6, False))
 
         self.animator.play(States.IDLE)
 
     def update(self, input_mgr, delta_time):
+        if self.state_machine.current == States.DEAD:
+            self.animator.update(delta_time)
+            return
+
         SPEED_MPM = (self.speed * 1000.0 / 60.0)
         SPEED_MPS = (SPEED_MPM / 60.0)
         SPEED_PPS = (SPEED_MPS * PIXEL_PER_METER)
@@ -280,7 +288,10 @@ class Character:
 
             self.Health -= 1
             if self.Health <= 0:    # dead
-                pass
+                self.animator.isBlinking = False
+                self.animator.isVisible = True
+                self.state_machine.change(States.DEAD)
+                return
 
             self.invincible_timer = self.INVINCIBLE_DURATION
             self.animator.isBlinking = True
@@ -314,6 +325,9 @@ class Character:
         return self.pos_x - 10, self.pos_y-64, self.pos_x+10, self.pos_y-63
 
     def get_bb(self):
+        if self.state_machine.current == States.DEAD:
+            return 0,0,0,0
+
         return self.pos_x-16, self.pos_y-64, self.pos_x+16, self.pos_y+16
 
     def draw(self):

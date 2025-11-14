@@ -7,6 +7,7 @@ class States:
     JUMP = 5
     HIT = 6
     STUN = 7
+    DEAD = 8
 
 class StateMachine:
     def __init__(self, owner):
@@ -20,6 +21,9 @@ class StateMachine:
 
     def update(self):
         c = self.owner
+
+        if self.current == States.DEAD:
+            return
 
         if self.current == States.JUMP:
             return
