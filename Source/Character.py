@@ -9,6 +9,8 @@ class Character:
     def __init__(self, name, x, y, controls):
         self.name = name
 
+        self.Health = 3;
+
         self.pos_x,self.pos_y = x, y
         self.speed, self.x_speed, self.y_speed = 20, 0, 0
         self.last_dir = 1
@@ -32,10 +34,16 @@ class Character:
         self.STUN_DURATION = 2.0
         self.stun_timer = 0.0
 
+        self.INVINCIBLE_DURATION = 1.0
+        self.invincible_timer = self.INVINCIBLE_DURATION
+
         self.controls = controls
         self.animator = Animator(self)
         self.state_machine = StateMachine(self)
         self.load_animations()
+
+        # Test용 코드
+        self.animator.isBlinking = True
 
     def load_animations(self):
         idle = load_image(self.name + '/Idle.png')
@@ -99,6 +107,14 @@ class Character:
         SPEED_MPM = (self.speed * 1000.0 / 60.0)
         SPEED_MPS = (SPEED_MPM / 60.0)
         SPEED_PPS = (SPEED_MPS * PIXEL_PER_METER)
+
+        # 무적시간
+        if self.invincible_timer > 0:
+            self.invincible_timer -= delta_time
+            if self.invincible_timer <= 0:
+                self.invincible_timer = 0
+                self.animator.isBlinking = False
+                self.animator.isVisible = True
 
         if self.parry_cooldown_timer > 0:
             self.parry_cooldown_timer -= delta_time
@@ -259,6 +275,14 @@ class Character:
             self.state_machine.change(States.STUN)
             self.stun_timer = self.STUN_DURATION
             self.x_speed = 0
+        elif group == 'player:Volcano':
+            if self.invincible_timer != 0: return
+
+            self.Health -= 1
+            if self.Health <= 0:    # dead
+                pass
+            self.invincible_timer = self.INVINCIBLE_DURATION
+            self.animator.isBlinking = True
 
     def get_attack_bb(self):
         if self.state_machine.current != States.ATTACK:
@@ -301,4 +325,3 @@ class Character:
             attack_bb = self.get_attack_bb()
             if attack_bb:
                 draw_rectangle(*self.get_attack_bb())
-
