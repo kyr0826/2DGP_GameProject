@@ -42,7 +42,10 @@ class Button:
 
     def is_clicked(self, mx, my):
         btn_bb = self.get_bb()
-        if (btn_bb[0] <= mx <= btn_bb[2]) and (btn_bb[1] <= (get_canvas_height()-my) <= btn_bb[3]):
+        if (self.enabled and
+                (btn_bb[0] <= mx <= btn_bb[2]) and
+                (btn_bb[1] <= (get_canvas_height()-my) <= btn_bb[3])):
+
             return True
 
         return False
