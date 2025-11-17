@@ -1,5 +1,7 @@
 from pico2d import Image, load_image, draw_rectangle
 import game_framework
+from Source import GameConstants
+
 
 class Volcano:
     volcano = None
@@ -20,7 +22,8 @@ class Volcano:
 
 
     def update(self):
-        if self.isLavaRising:
+
+        if not GameConstants.isGameEnd and self.isLavaRising:
             self.height += self.RISING_SPEED * game_framework.frame_time
             if self.height > self.tex_h:
                 self.height = self.tex_h

@@ -1,5 +1,6 @@
 from AnimationSystem import *
 import game_framework
+from Source import GameConstants
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 GRAVITY = 9.81
@@ -114,7 +115,6 @@ class Character:
     def update(self):
         delta_time = game_framework.frame_time
         if self.state_machine.current == States.DEAD:
-
             self.animator.update(delta_time)
             return
 
@@ -219,7 +219,9 @@ class Character:
             self.animator.isBlinking = False
             self.animator.isVisible = True
             self.state_machine.change(States.DEAD)
+            GameConstants.isGameEnd = True
             return
+
         if group == 'player:volcano':
             self.invincible_timer = self.INVINCIBLE_DURATION_Volcano
             self.animator.isBlinking = True

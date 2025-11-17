@@ -1,9 +1,9 @@
 from MapGenerator import *
 from Character import *
 from InputManager import *
-from Source import game_world
+from Source import game_world, GameConstants
 from Volcano import Volcano
-from Source.CollisionManager import add_collision_pair, add_list_collision_pair, handle_collisions, collision_pairs
+from Source.CollisionManager import add_collision_pair, add_list_collision_pair, handle_collisions
 import Lobby_scene
 from GameConstants import *
 from Player_Info_bar import Player_Info_bar
@@ -15,12 +15,15 @@ volcano = None
 
 time_frame_img : Image = None
 time_font : Font = None
+
 def init():
     global input_mgr,p1_info,p2_info, volcano_rising_timer, volcano
 
     global time_frame_img, time_font
     time_frame_img = load_image("UI/Time_Frame.png")
     time_font = load_font("ENCR10B.TTF", size=24)
+
+    GameConstants.isGameEnd = False
 
     volcano_rising_timer = Volcano_rising_wait_time
     init_map()
@@ -63,7 +66,9 @@ def finish():
 
 def handle_events():
     events = get_events()
-    input_mgr.update(events)
+
+    if not GameConstants.isGameEnd:
+        input_mgr.update(events)
 
     for event in events:
         if event.type == SDL_QUIT:
