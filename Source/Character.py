@@ -349,20 +349,6 @@ class Character:
 
         return self.pos_x-16, self.pos_y-64, self.pos_x+16, self.pos_y+16
 
-    def draw_debug_healthbar(self):
-        if self.state_machine.current is States.DEAD: return
-
-        healthbar_width = 50
-        health_rate = self.Health / self.MAX_HEALTH
-
-        left = self.pos_x - healthbar_width / 2
-        bottom = self.get_bb()[3] + 0.5
-
-        right = left + healthbar_width * health_rate
-        top = bottom + 10
-
-        draw_rectangle(left, top, right, bottom, 255,100,100,255, True)
-
     def draw(self):
         self.animator.draw_current_frame()
 
