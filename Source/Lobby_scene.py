@@ -8,7 +8,7 @@ font: Font = None
 start_button:Button = None
 
 def init():
-    global bg, button_img, font, start_button
+    global bg, font, start_button
 
     resize_canvas(800, 600)
     bg = load_image('UI/Game_Title_bg.png')
@@ -25,11 +25,13 @@ def handle_events():
             game_framework.quit()
 
         if event.type == SDL_KEYDOWN:
-            if event.key == SDLK_SPACE:
-                game_framework.change_mode(select_scene)
-
-            elif event.key == SDLK_ESCAPE:
+            if event.key == SDLK_ESCAPE:
                 game_framework.quit()
+
+        if event.type == SDL_MOUSEBUTTONDOWN:
+            if event.button == SDL_BUTTON_LEFT:
+                if start_button.is_clicked(event.x, event.y):
+                    game_framework.change_mode(select_scene)
 
 
 def draw():
