@@ -1,12 +1,13 @@
-from pico2d import *
 from AnimationSystem import *
+import game_framework
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 GRAVITY = 9.81
 KNOCKBACK_SPEED = PIXEL_PER_METER * 5.0
 
 class Character:
-    def __init__(self, name, x, y, controls):
+    def __init__(self, name, x, y, input_mgr, controls):
+        self.input_mgr = input_mgr
         self.name = name
 
         self.MAX_HEALTH = 150.0
@@ -110,8 +111,10 @@ class Character:
 
         self.animator.play(States.IDLE)
 
-    def update(self, input_mgr, delta_time):
+    def update(self):
+        delta_time = game_framework.frame_time
         if self.state_machine.current == States.DEAD:
+
             self.animator.update(delta_time)
             return
 
@@ -145,13 +148,13 @@ class Character:
         self.y_speed -= GRAVITY * SPEED_PPS * delta_time
 
         if self.isGrounded:
-            self.useShield = input_mgr.get_key_down(self.controls['defense'])
+            self.useShield = self.input_mgr.get_key_down(self.controls['defense'])
 
-            if self.just_landed and input_mgr.get_key_press(self.controls['down']):
+            if self.just_landed and self.input_mgr.get_key_press(self.controls['down']):
                 self.is_dropping_down = True
                 self.isGrounded = False
 
-            if (not self.is_dropping_down) and input_mgr.get_key_down(self.controls['jump']):
+            if (not self.is_dropping_down) and self.input_mgr.get_key_down(self.controls['jump']):
                 self.y_speed = self.MAX_JUMP_SPEED
                 self.isGrounded = False
                 self.isJumping = True
@@ -159,16 +162,16 @@ class Character:
                 self.state_machine.change(States.JUMP)
 
             if not self.useShield and self.state_machine.current != States.HIT:
-                if input_mgr.get_key_press(self.controls['attack']):
+                if self.input_mgr.get_key_press(self.controls['attack']):
                     self.state_machine.change(States.ATTACK)
 
-                elif input_mgr.get_key_press(self.controls['parrying']) and self.parry_cooldown_timer <= 0:
+                elif self.input_mgr.get_key_press(self.controls['parrying']) and self.parry_cooldown_timer <= 0:
                     self.state_machine.change(States.PARRYING)
                     self.parry_cooldown_timer = self.PARRY_COOLDOWN
         else:
             self.useShield = False
 
-        if input_mgr.get_key_up(self.controls['jump']) and self.isJumping:
+        if self.input_mgr.get_key_up(self.controls['jump']) and self.isJumping:
             self.isJumping = False
             self.isBrakingJump = True
 
@@ -182,7 +185,7 @@ class Character:
             self.isJumping = False
             self.isBrakingJump = False
 
-        move = input_mgr.get_axis(self.controls['left'], self.controls['right'])
+        move = self.input_mgr.get_axis(self.controls['left'], self.controls['right'])
         is_busy = self.state_machine.current in [States.ATTACK, States.PARRYING, States.DEFENSE, States.HIT, States.STUN]
         if move != 0 and not is_busy:
             self.last_dir = move

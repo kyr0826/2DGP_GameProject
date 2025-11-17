@@ -1,5 +1,5 @@
 from pico2d import Image, load_image, draw_rectangle
-
+import game_framework
 
 class Volcano:
     volcano = None
@@ -19,13 +19,13 @@ class Volcano:
         self.tex_h = Volcano.volcano.h
 
 
-    def update(self, delta_time):
+    def update(self):
         if self.isLavaRising:
-            self.height += self.RISING_SPEED * delta_time
+            self.height += self.RISING_SPEED * game_framework.frame_time
             if self.height > self.tex_h:
                 self.height = self.tex_h
 
-        self.scroll = (self.scroll + self.flow_speed * delta_time) % self.tex_h
+        self.scroll = (self.scroll + self.flow_speed * game_framework.frame_time) % self.tex_h
 
     def get_bb(self):
         return 0, 0, self.width, self.height
