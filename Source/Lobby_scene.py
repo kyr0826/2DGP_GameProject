@@ -1,20 +1,20 @@
 from pico2d import *
 import game_framework
 import select_scene
+from Button import Button
 
 bg: Image = None
 font: Font = None
-button_img: Image = None
-
+start_button:Button = None
 
 def init():
-    global bg, button_img, font
+    global bg, button_img, font, start_button
 
     resize_canvas(800, 600)
     bg = load_image('UI/Game_Title_bg.png')
     font = load_font('ENCR10B.TTF',32)
 
-    button_img = load_image('UI/Button_Frame.png')
+    start_button = Button('Game Start',400,68)
 
 def finish(): pass
 
@@ -35,11 +35,7 @@ def handle_events():
 def draw():
     clear_canvas()
     bg.draw(400, 300, 900, 600)
-
-    # 버튼 위치 테스트
-    button_img.draw(400, 68, 230, 84)
-    btn_text = 'Start'
-    font.draw(400 - (len(btn_text) * 32 * 0.28), 68, btn_text, (255,255,100))
+    start_button.draw()
     update_canvas()
 
 def update(): pass

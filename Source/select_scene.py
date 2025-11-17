@@ -1,5 +1,6 @@
 from pico2d import *
 import game_framework
+from Button import Button
 
 # 선택된 캐릭터 정보 (다른 모듈에서 접근 가능)
 selected_characters = {
@@ -21,11 +22,11 @@ bg: Image = None
 
 character_images = []
 font: Font = None
-button_img: Image = None
+play_button:Button = None
 
 def init():
     resize_canvas(800, 600)
-    global bg, character_images, select_frame, name_frame, button_img
+    global bg, character_images, select_frame, name_frame, play_button
     global p1_index, p2_index, p1_selected, p2_selected
     global font
 
@@ -47,7 +48,7 @@ def init():
         character_images.append(load_image(f'{char}/select_face.png'))
 
     font = load_font('ENCR10B.TTF', 24)
-    button_img = load_image('UI/Button_Frame.png')
+    play_button = Button('Game Play',400, 68)
 
 def finish():
     pass
@@ -103,6 +104,7 @@ def draw():
     name_w = int(card_size * 0.9)
     name_h = int(name_w * 0.2)
     name_y = card_y - card_size / 2 - name_card_spacing
+
     # P1
     x = 400 - card_size / 2 - card_spacing
     select_frame.draw(x, card_y, card_size, card_size)
@@ -122,16 +124,14 @@ def draw():
     # 준비 상태 표시
     if p1_selected:
         x = 400 - card_size / 2 - card_spacing
-        font.draw(x - (len("1P Ready!") * 24 * 0.28), name_y - 35, "1P Ready!", (255, 255, 0))
+        font.draw(x - (len("1P Ready!") * 24 * 0.28), name_y - 35, "1P Ready!", (255, 200, 0))
 
     if p2_selected:
         x = 400 + card_size / 2 + card_spacing
-        font.draw(x - (len("2P Ready!") * 24 * 0.28), name_y - 35, "2P Ready!", (255, 255, 0))
+        font.draw(x - (len("2P Ready!") * 24 * 0.28), name_y - 35, "2P Ready!", (255, 200, 0))
 
     if p1_selected and p2_selected:
-        # 버튼 위치 테스트
-        button_img.draw(400, 68, 230, 84)
-        font.draw(400 - (len('Game Start') * 24 * 0.28), 68, 'Game Start', (255, 255, 100))
+        play_button.draw()
 
     update_canvas()
 
