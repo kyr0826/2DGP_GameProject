@@ -1,6 +1,6 @@
 from pico2d import *
 import game_framework
-import select_scene
+import character_select_scene
 from Button import Button
 from GameConstants import *
 
@@ -30,7 +30,7 @@ def handle_events():
         if event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
                 if start_button.is_clicked(event.x, event.y):
-                    game_framework.change_mode(select_scene)
+                    game_framework.change_mode(character_select_scene)
 
 
 def draw():
