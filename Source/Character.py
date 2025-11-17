@@ -248,7 +248,7 @@ class Character:
             player_foot_bottom = self.get_foot_bb()[1]
             diff = platform_top - player_foot_bottom
 
-            LANDING_TOLERANCE = 15.0
+            LANDING_TOLERANCE = 10.0
             can_land = False
 
             is_moving_down = self.y_speed < 0
@@ -354,7 +354,6 @@ class Character:
 
         draw_rectangle(*self.get_bb(),0,255,150,1)
         draw_rectangle(*self.get_foot_bb(),255,255,0,1)
-        self.draw_debug_healthbar()
 
         if self.state_machine.current == States.ATTACK:
             attack_bb = self.get_attack_bb()
