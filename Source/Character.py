@@ -298,8 +298,8 @@ class Character:
             if my_state == States.HIT:
                 return
 
-            self.take_damage(15, group)
             self.state_machine.change(States.HIT)
+            self.take_damage(15, group)
             self.x_speed = other.last_dir * KNOCKBACK_SPEED
             self.y_speed = KNOCKBACK_SPEED / 2
 
