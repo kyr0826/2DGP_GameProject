@@ -1,4 +1,4 @@
-from pico2d import *
+from pico2d import load_image, get_time, clear_canvas, update_canvas, resize_canvas, draw_rectangle
 import game_framework
 import Lobby_scene
 
@@ -19,7 +19,8 @@ def handle_events(): pass
 
 def draw():
     clear_canvas()
-    image.draw(400, 300)
+    draw_rectangle(0,0,800,750,0,0,0,255,True)
+    image.draw(400, 375)
     update_canvas()
 
 def update():

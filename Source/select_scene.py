@@ -1,20 +1,10 @@
 from pico2d import *
 import game_framework
 from Button import Button
+import Lobby_scene
+import play_scene
+from GameConstants import *
 
-# 선택된 캐릭터 정보 (다른 모듈에서 접근 가능)
-selected_characters = {
-    'player1': None,
-    'player2': None
-}
-
-characters = ['Fighter', 'Samurai', 'Shinobi']
-
-p1_index = 0
-p2_index = 0
-
-p1_selected = False
-p2_selected = False
 
 name_frame: Image = None
 select_frame: Image = None
@@ -25,14 +15,13 @@ font: Font = None
 play_button:Button = None
 
 def init():
-    resize_canvas(800, 600)
     global bg, character_images, select_frame, name_frame, play_button
     global p1_index, p2_index, p1_selected, p2_selected
     global font
 
     # 초기화
     p1_index = 0
-    p2_index = 1
+    p2_index = 0
     p1_selected = False
     p2_selected = False
     selected_characters['player1'] = None
@@ -48,7 +37,7 @@ def init():
         character_images.append(load_image(f'{char}/select_face.png'))
 
     font = load_font('ENCR10B.TTF', 24)
-    play_button = Button('Game Play',400, 68)
+    play_button = Button('Game Play',GAME_WINDOW_WIDTH//2, 143)
 
 def finish():
     pass
@@ -82,7 +71,14 @@ def handle_events():
                 selected_characters['player2'] = characters[p2_index]
 
             if event.key == SDLK_ESCAPE:
-                game_framework.quit()
+                game_framework.change_mode(Lobby_scene)
+
+        elif event.type == SDL_MOUSEBUTTONDOWN:
+            if event.button == SDL_BUTTON_LEFT:
+                if play_button.is_clicked(event.x, event.y):
+                    game_framework.change_mode(play_scene)
+
+
 
 
 def update():
@@ -91,12 +87,13 @@ def update():
 
 def draw():
     clear_canvas()
+    draw_rectangle(0, 0, 800, 750, 0, 0, 0, 255, True)
 
     # 배경
-    bg.draw(bg.w / 2, bg.h / 2, bg.w, bg.h)
+    bg.draw(GAME_WINDOW_WIDTH//2, GAME_WINDOW_HEIGHT//2, bg.w, bg.h)
 
     # 캐릭터 카드 그리기
-    card_y = 300
+    card_y = 375
     card_size = 200
     card_spacing = 100
 
@@ -130,8 +127,8 @@ def draw():
         x = 400 + card_size / 2 + card_spacing
         font.draw(x - (len("2P Ready!") * 24 * 0.28), name_y - 35, "2P Ready!", (255, 200, 0))
 
-    if p1_selected and p2_selected:
-        play_button.draw()
+    play_button.enabled = p1_selected and p2_selected
+    play_button.draw()
 
     update_canvas()
 

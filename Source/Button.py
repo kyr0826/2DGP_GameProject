@@ -31,11 +31,11 @@ class Button:
 
         if self.enabled:
             Button.btn_enable_img.draw(self.x, self.y, btn_w, btn_h)
-            Button.btn_font.draw(400 - (len(self.btn_text) * self.font_size * 0.28), 68, self.btn_text, self.font_color)
+            Button.btn_font.draw(self.x - (len(self.btn_text) * self.font_size * 0.28), self.y, self.btn_text, self.font_color)
 
         else:
             Button.btn_disable_img.draw(self.x, self.y, btn_w, btn_h)
-            Button.btn_font.draw(400 - (len(self.btn_text) * self.font_size * 0.28), 68, self.btn_text, (125,125,125))
+            Button.btn_font.draw(self.x - (len(self.btn_text) * self.font_size * 0.28), self.y, self.btn_text, (125,125,125))
 
         # 클릭범위 확인용
         draw_rectangle(*self.get_bb())

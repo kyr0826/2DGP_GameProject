@@ -3,6 +3,6 @@ import game_framework
 
 import Splash_scene
 
-open_canvas()
+open_canvas(800,750)
 game_framework.run(Splash_scene)
 close_canvas()

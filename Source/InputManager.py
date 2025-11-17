@@ -6,11 +6,10 @@ class InputManager:
         self.key_up = {}
         self.key_down_events = {}
 
-    def update(self):
+    def update(self, events):
         self.key_up.clear()
         self.key_down_events.clear()
 
-        events = get_events()
         for e in events:
             if e.type == SDL_KEYDOWN:
                 if not self.key_state.get(e.key,False):

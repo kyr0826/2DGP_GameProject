@@ -37,9 +37,9 @@ def main():
         running = not input_mgr.get_key_down(SDLK_ESCAPE)
         volc.isLavaRising = input_mgr.get_key_down(SDLK_SPACE)
 
-        player1.update(input_mgr, 0.01)
-        player2.update(input_mgr, 0.01)
-        volc.update(0.01)
+        player1.update()
+        player2.update()
+        volc.update()
 
         handle_collisions()
 
@@ -49,8 +49,6 @@ def main():
         player2.draw()
         volc.draw()
         update_canvas()
-
-        delay(0.01)
 
     close_canvas()
 
