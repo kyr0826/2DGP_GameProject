@@ -36,3 +36,21 @@ class Button:
         else:
             Button.btn_disable_img.draw(self.x, self.y, btn_w, btn_h)
             Button.btn_font.draw(400 - (len(self.btn_text) * self.font_size * 0.28), 68, self.btn_text, (125,125,125))
+
+        # 클릭범위 확인용
+        draw_rectangle(*self.get_bb())
+
+    def is_clicked(self, mx, my):
+        btn_bb = self.get_bb()
+        if (btn_bb[0] <= mx <= btn_bb[2]) and (btn_bb[1] <= (get_canvas_height()-my) <= btn_bb[3]):
+            return True
+
+        return False
+
+
+    def get_bb(self):
+        btn_w = int(self.BTN_WIDTH * self.scale)
+        btn_h = int(self.BTN_HEIGHT * self.scale)
+
+        return (self.x - btn_w / 2, self.y - btn_h / 2,
+                self.x + btn_w / 2, self.y + btn_h / 2)
