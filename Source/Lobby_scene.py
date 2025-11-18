@@ -13,7 +13,7 @@ def init():
     bg = load_image('UI/Game_Title_bg.png')
     font = load_font('ENCR10B.TTF',32)
 
-    start_button = Button('Game Start',gc.GAME_WINDOW_WIDTH//2,143)
+    start_button = Button('Game Start',gc.GAME_WINDOW_WIDTH//2,163)
     start_button.add_event(lambda :game_framework.change_mode(character_select_scene))
 
     print('Lobby Init')
