@@ -115,6 +115,9 @@ class Character:
     def update(self):
         delta_time = game_framework.frame_time
 
+        if GameConstants.isGamePaused:
+            return
+
         if GameConstants.isGameEnd:
             self.animator.update(delta_time)
             if self.Health > 0:
