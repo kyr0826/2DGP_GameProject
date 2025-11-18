@@ -2,7 +2,7 @@ from pico2d import *
 import game_framework
 import character_select_scene
 from Button import Button
-from GameConstants import *
+import GameConstants as gc
 
 bg: Image = None
 font: Font = None
@@ -13,8 +13,13 @@ def init():
     bg = load_image('UI/Game_Title_bg.png')
     font = load_font('ENCR10B.TTF',32)
 
-    start_button = Button('Game Start',GAME_WINDOW_WIDTH//2,143)
+    start_button = Button('Game Start',gc.GAME_WINDOW_WIDTH//2,143)
     start_button.add_event(lambda :game_framework.change_mode(character_select_scene))
+
+    print('Lobby Init')
+    gc.p1_index = 0
+    gc.p2_index = 0
+    print(gc.p1_index, gc.p2_index)
 
 def finish(): pass
 
