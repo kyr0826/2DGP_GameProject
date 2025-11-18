@@ -1,5 +1,8 @@
 from pico2d import *
 
+from Source import GameConstants
+
+
 class Button:
     btn_enable_img:Image = None
     btn_disable_img:Image = None
@@ -38,7 +41,8 @@ class Button:
             Button.btn_font.draw(self.x - (len(self.btn_text) * self.font_size * 0.28), self.y, self.btn_text, (125,125,125))
 
         # 클릭범위 확인용
-        draw_rectangle(*self.get_bb())
+        if GameConstants.SHOW_DEBUG_RECT:
+            draw_rectangle(*self.get_bb())
 
     def is_clicked(self, mx, my):
         btn_bb = self.get_bb()

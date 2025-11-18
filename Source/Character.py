@@ -114,6 +114,7 @@ class Character:
 
     def update(self):
         delta_time = game_framework.frame_time
+
         if self.state_machine.current == States.DEAD:
             self.animator.update(delta_time)
             return
@@ -354,10 +355,11 @@ class Character:
     def draw(self):
         self.animator.draw_current_frame()
 
-        draw_rectangle(*self.get_bb(),0,255,150,1)
-        draw_rectangle(*self.get_foot_bb(),255,255,0,1)
+        if GameConstants.SHOW_DEBUG_RECT:
+            draw_rectangle(*self.get_bb(),0,255,150,1)
+            draw_rectangle(*self.get_foot_bb(),255,255,0,1)
 
-        if self.state_machine.current == States.ATTACK:
-            attack_bb = self.get_attack_bb()
-            if attack_bb:
-                draw_rectangle(*self.get_attack_bb())
+            if self.state_machine.current == States.ATTACK:
+                attack_bb = self.get_attack_bb()
+                if attack_bb:
+                    draw_rectangle(*self.get_attack_bb())

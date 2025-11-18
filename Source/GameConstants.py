@@ -17,3 +17,5 @@ p2_selected = False
 Volcano_rising_wait_time = 10.0
 
 isGameEnd = False
+
+SHOW_DEBUG_RECT = False
