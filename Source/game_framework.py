@@ -1,5 +1,6 @@
 import time
 frame_time = 0.0
+time_scale = 1.0
 
 running = None
 stack = None
@@ -37,6 +38,10 @@ def quit():
     global running
     running = False
 
+def set_time_scale(scale):
+    global time_scale
+    time_scale = float(scale)
+
 def run(start_mode):
     global running, stack
     running = True
@@ -52,9 +57,10 @@ def run(start_mode):
         stack[-1].update()
         stack[-1].draw()
 
-        frame_time = min(time.time() - current_time,0.016)
+        frame_time = min(time.time() - current_time, 0.016)
         frame_rate = 1.0 / frame_time
         current_time += frame_time
+        frame_time *= time_scale
         # print(f'Frame Time: {frame_time}, Frame Rate: {frame_rate}')
 
     # repeatedly delete the top of the stack
