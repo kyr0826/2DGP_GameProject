@@ -1,16 +1,14 @@
 from pico2d import *
-
 from Source import GameConstants
 
-
 class Button:
-    btn_enable_img:Image = None
-    btn_disable_img:Image = None
-    btn_font:Font = None
+    btn_enable_img: Image = None
+    btn_disable_img: Image = None
+    btn_font: Font = None
 
-    def __init__(self, btn_text, x, y, font_color=(255,200,0), scale=1, enabled = True):
+    def __init__(self, btn_text, x, y, font_color=(255, 200, 0), scale=1, enabled=True):
         self.btn_text = btn_text
-
+        self.btn_click_events = []
         self.x = x
         self.y = y
         self.scale = scale
@@ -34,11 +32,13 @@ class Button:
 
         if self.enabled:
             Button.btn_enable_img.draw(self.x, self.y, btn_w, btn_h)
-            Button.btn_font.draw(self.x - (len(self.btn_text) * self.font_size * 0.28), self.y, self.btn_text, self.font_color)
+            Button.btn_font.draw(self.x - (len(self.btn_text) * self.font_size * 0.28), self.y, self.btn_text,
+                                 self.font_color)
 
         else:
             Button.btn_disable_img.draw(self.x, self.y, btn_w, btn_h)
-            Button.btn_font.draw(self.x - (len(self.btn_text) * self.font_size * 0.28), self.y, self.btn_text, (125,125,125))
+            Button.btn_font.draw(self.x - (len(self.btn_text) * self.font_size * 0.28), self.y, self.btn_text,
+                                 (125, 125, 125))
 
         # 클릭범위 확인용
         if GameConstants.SHOW_DEBUG_RECT:
@@ -48,12 +48,15 @@ class Button:
         btn_bb = self.get_bb()
         if (self.enabled and
                 (btn_bb[0] <= mx <= btn_bb[2]) and
-                (btn_bb[1] <= (get_canvas_height()-my) <= btn_bb[3])):
+                (btn_bb[1] <= (get_canvas_height() - my) <= btn_bb[3])):
+            self.play_events()
 
-            return True
+    def add_event(self, event):
+        self.btn_click_events.append(event)
 
-        return False
-
+    def play_events(self):
+        for event in self.btn_click_events:
+            event()
 
     def get_bb(self):
         btn_w = int(self.BTN_WIDTH * self.scale)
