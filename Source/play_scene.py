@@ -67,8 +67,7 @@ def finish():
 def handle_events():
     events = get_events()
 
-    if not GameConstants.isGameEnd:
-        input_mgr.update(events)
+    input_mgr.update(events)
 
     for event in events:
         if event.type == SDL_QUIT:

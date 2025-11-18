@@ -1,3 +1,6 @@
+from Source.GameConstants import isGameEnd
+
+
 class States:
     IDLE = 0
     RUN = 1
@@ -21,6 +24,9 @@ class StateMachine:
 
     def update(self):
         c = self.owner
+
+        if isGameEnd:
+            return
 
         if self.current == States.DEAD:
             return

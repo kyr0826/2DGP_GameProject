@@ -115,8 +115,11 @@ class Character:
     def update(self):
         delta_time = game_framework.frame_time
 
-        if self.state_machine.current == States.DEAD:
+        if GameConstants.isGameEnd:
             self.animator.update(delta_time)
+            if self.Health > 0:
+                if self.state_machine.current is not States.IDLE:
+                    self.state_machine.change(States.IDLE)
             return
 
         SPEED_MPM = (self.speed * 1000.0 / 60.0)
