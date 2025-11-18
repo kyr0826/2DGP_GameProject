@@ -14,6 +14,7 @@ def init():
     font = load_font('ENCR10B.TTF',32)
 
     start_button = Button('Game Start',GAME_WINDOW_WIDTH//2,143)
+    start_button.add_event(lambda :game_framework.change_mode(character_select_scene))
 
 def finish(): pass
 
@@ -29,8 +30,7 @@ def handle_events():
 
         if event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
-                if start_button.is_clicked(event.x, event.y):
-                    game_framework.change_mode(character_select_scene)
+                start_button.is_clicked(event.x, event.y)
 
 
 def draw():

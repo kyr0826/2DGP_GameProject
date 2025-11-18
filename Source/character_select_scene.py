@@ -14,7 +14,6 @@ font: Font = None
 key_font: Font = None
 play_button: Button = None
 
-
 def init():
     global bg, character_images, select_frame, name_frame, play_button
     global p1_index, p2_index, p1_selected, p2_selected
@@ -40,7 +39,7 @@ def init():
     font = load_font('ENCR10B.TTF', 24)
     key_font = load_font('ENCR10B.TTF', 15)
     play_button = Button('Game Play', GAME_WINDOW_WIDTH // 2, 143)
-
+    play_button.add_event(lambda: game_framework.change_mode(play_scene))
 
 def finish():
     pass
@@ -78,8 +77,7 @@ def handle_events():
 
         elif event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
-                if play_button.is_clicked(event.x, event.y):
-                    game_framework.change_mode(play_scene)
+                play_button.is_clicked(event.x, event.y)
 
 
 def update():
