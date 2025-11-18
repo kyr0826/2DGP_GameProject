@@ -37,7 +37,7 @@ def init():
 
     font = load_font('ENCR10B.TTF', 24)
     key_font = load_font('ENCR10B.TTF', 15)
-    play_button = Button('Game Play', gc.GAME_WINDOW_WIDTH // 2, 143)
+    play_button = Button('Game Play', gc.GAME_WINDOW_WIDTH // 2, 163)
     play_button.add_event(lambda: game_framework.change_mode(play_scene))
 
 def finish():
@@ -91,7 +91,7 @@ def draw():
     # 캐릭터 카드 그리기
     card_y = 375
     card_size = 200
-    card_spacing = 30
+    card_spacing = 16
 
     name_card_spacing = 20
     name_w = int(card_size * 0.9)
@@ -108,17 +108,29 @@ def draw():
     font_color = (255, 255, 255) if not gc.p1_selected else (255, 255, 0)
     font.draw(x - (len(gc.characters[gc.p1_index]) * 24 * 0.28), name_y, gc.characters[gc.p1_index], font_color)
 
-    # Key
+    # Key Map
     key_texts = ['[ P1 Controls ]',
-                 'Move     A/D',
-                 'Jump     W',
-                 'Down     S',
-                 'Attack   G',
-                 'Select   G',
-                 'Defend   H',
-                 'Parry    J']
-    key_x = 25
-    key_y = card_y + card_size//2 - 25
+                 'Move   : A/D',
+                 'Jump   : W',
+                 'Down   : S',
+                 'Attack : G',
+                 'Defend : H',
+                 'Parry  : J',
+                 ' ',
+                 '[ P2 Controls ]',
+                 'Move   : LEFT/RIGHT',
+                 'Jump   : UP',
+                 'Down   : DOWN',
+                 'Select : NP_1',
+                 'Defend : NP_2',
+                 'Parry  : NP_3',
+                 ' ',
+                 '[ Other Controls ]',
+                 'Select : ATK',
+                 'Pause,Quit : ESC']
+
+    key_x = 10
+    key_y = card_y + int(card_size * 0.8)
     for i in range(len(key_texts)):
         key_font.draw(key_x, key_y - 20 * i, key_texts[i], (125, 125, 125))
 
@@ -132,19 +144,6 @@ def draw():
     name_frame.draw(x, name_y, name_w, name_h)
     font_color = (255, 255, 255) if not gc.p2_selected else (255, 255, 0)
     font.draw(x - (len(gc.characters[gc.p2_index]) * 24 * 0.28), name_y, gc.characters[gc.p2_index], font_color)
-
-    # Key
-    key_texts = ['[ P2 Controls ]',
-                 'Move   LEFT/RIGHT',
-                 'Jump   UP',
-                 'Down   DOWN',
-                 'Attack NUMPAD_1',
-                 'Select NUMPAD_1',
-                 'Defend NUMPAD_2',
-                 'Parry  NUMPAD_3']
-    key_x = x + card_size//2 + 5
-    for i in range(len(key_texts)):
-        key_font.draw(key_x, key_y - 20 * i, key_texts[i], (125, 125, 125))
 
     # 준비 상태 표시
     if gc.p1_selected:
