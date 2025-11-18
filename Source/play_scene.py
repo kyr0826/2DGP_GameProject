@@ -92,7 +92,7 @@ def handle_events():
             game_framework.quit()
 
         elif event.type == SDL_KEYDOWN:
-            if event.key == SDLK_SPACE:
+            if event.key == SDLK_ESCAPE:
                 GameConstants.isGamePaused = not GameConstants.isGamePaused
                 global retry_btn, exit_btn
                 if GameConstants.isGamePaused:
@@ -116,7 +116,7 @@ def draw_popup():
     popup_bg_img.draw(popup_x, popup_y)
 
     if GameConstants.isGameEnd:
-        popup_font.draw(popup_x, popup_y, "??? Win", (255, 120, 55))
+        popup_font.draw(popup_x-(len("Winer : ") * 32 * 0.28), popup_y, "Winer : ", (255, 120, 55))
 
     retry_btn.x = popup_x - 150
     retry_btn.y = popup_y - popup_bg_img.h//2 + 100
