@@ -56,7 +56,8 @@ def init():
 
     p2_info = Player_Info_bar(player2, False)
 
-    volcano = Volcano()
+    if volcano is None:
+        volcano = Volcano()
     game_world.add_object(volcano, 1)
 
     players = [player1, player2]
@@ -74,13 +75,13 @@ def init():
 
 
 def finish():
-    global collision_pairs
+    global collision_pairs, volcano
     game_world.clear()
     collision_pairs = {}
     GameConstants.isGameEnd = False
     GameConstants.isGamePaused = False
     game_framework.set_time_scale(1.0)
-
+    volcano.height = 0
 
 def handle_events():
     global retry_btn, exit_btn

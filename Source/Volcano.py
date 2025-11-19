@@ -1,12 +1,13 @@
 from pico2d import Image, load_image, draw_rectangle
 import game_framework
 from Source import GameConstants
+from Source.GameConstants import GAME_WINDOW_WIDTH
 
 
 class Volcano:
     volcano = None
     def __init__(self):
-        self.width = 800
+        self.width = GAME_WINDOW_WIDTH
         self.height = 0
         self.isLavaRising = False
         self.RISING_SPEED = 5.0
