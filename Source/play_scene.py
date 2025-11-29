@@ -45,13 +45,13 @@ def init():
     input_mgr = InputManager()
 
     cx = gv.GAME_WINDOW_WIDTH // 2
-    player1 = Character(gv.selected_characters['player1'], cx-50, 100, input_mgr,
+    player1 = Character(gv.selected_characters['player1'], cx-50, 150, input_mgr,
                         {'left': SDLK_a, 'right': SDLK_d, 'jump': SDLK_w, 'down': SDLK_s,
                          'attack': SDLK_g, 'defense': SDLK_h, 'parrying': SDLK_j})
 
     p1_info = Player_Info_bar(player1, True)
 
-    player2 = Character(gv.selected_characters['player2'], cx+50, 100, input_mgr,
+    player2 = Character(gv.selected_characters['player2'], cx+50, 150, input_mgr,
                         {'left': SDLK_LEFT, 'right': SDLK_RIGHT, 'jump': SDLK_UP, 'down': SDLK_DOWN,
                          'attack': SDLK_KP_1, 'defense': SDLK_KP_2, 'parrying': SDLK_KP_3})
 
