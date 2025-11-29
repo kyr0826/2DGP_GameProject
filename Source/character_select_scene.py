@@ -17,8 +17,6 @@ play_button: Button = None
 def init():
     global bg, character_images, select_frame, name_frame, play_button
     global font, key_font
-    print('character select Init')
-    print(gv.p1_index, gv.p2_index)
     # 초기화
     gv.selected_characters['player1'] = gv.characters[gv.p1_index]
     gv.selected_characters['player2'] = gv.characters[gv.p2_index]

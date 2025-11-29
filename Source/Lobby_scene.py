@@ -16,10 +16,8 @@ def init():
     start_button = Button('Game Start', gv.GAME_WINDOW_WIDTH // 2, 163)
     start_button.add_event(lambda :game_framework.change_mode(character_select_scene))
 
-    print('Lobby Init')
     gv.p1_index = 0
     gv.p2_index = 0
-    print(gv.p1_index, gv.p2_index)
 
 def finish(): pass
 
