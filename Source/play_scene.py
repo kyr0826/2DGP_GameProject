@@ -40,21 +40,25 @@ def init():
     exit_btn.add_event(lambda: game_framework.change_mode(Lobby_scene))
 
     volcano_rising_timer = gv.Volcano_rising_wait_time
-    init_map()
+    init_map(gv.map_idx)
 
     input_mgr = InputManager()
 
-    player1 = Character(gv.selected_characters['player1'], 300, 300, input_mgr,
+    cx = gv.GAME_WINDOW_WIDTH // 2
+    player1 = Character(gv.selected_characters['player1'], cx-50, 100, input_mgr,
                         {'left': SDLK_a, 'right': SDLK_d, 'jump': SDLK_w, 'down': SDLK_s,
                          'attack': SDLK_g, 'defense': SDLK_h, 'parrying': SDLK_j})
 
     p1_info = Player_Info_bar(player1, True)
 
-    player2 = Character(gv.selected_characters['player2'], 500, 300, input_mgr,
+    player2 = Character(gv.selected_characters['player2'], cx+50, 100, input_mgr,
                         {'left': SDLK_LEFT, 'right': SDLK_RIGHT, 'jump': SDLK_UP, 'down': SDLK_DOWN,
                          'attack': SDLK_KP_1, 'defense': SDLK_KP_2, 'parrying': SDLK_KP_3})
 
     p2_info = Player_Info_bar(player2, False)
+
+    players = [player1, player2]
+    game_world.add_objects(players)
 
     if volcano is None:
         volcano = Volcano()
@@ -62,9 +66,6 @@ def init():
     volcano.height = 0
 
     game_world.add_object(volcano, 1)
-
-    players = [player1, player2]
-    game_world.add_objects(players)
 
     platforms = get_platforms()
 

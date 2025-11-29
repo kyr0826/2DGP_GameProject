@@ -77,7 +77,7 @@ def init_map_islands():
     CENTER = W // 2
     SIDE_MARGIN = 50
 
-    platforms.append(PlatformData((0, 0, W, 40), (100, 255, 100, 1), 'ground'))
+    platforms.append(PlatformData((0, 0, W, 50), (100, 255, 100, 1), 'ground'))
 
     width = 150
     platforms.append(PlatformData((SIDE_MARGIN, 125, SIDE_MARGIN + width, 155), (100, 255, 150, 1), 'one-way'))
@@ -226,7 +226,7 @@ def draw_map():
 
     for p in platforms:
         # 바닥(ground) 타입은 그리지 않고 건너뜀 (요청사항 반영)
-        if p.type == 'ground': continue
+        #if p.type == 'ground': continue
 
         pl, pb, pr, pt = p.rect
         platform_width = pr - pl
@@ -296,4 +296,7 @@ def draw_map():
             )
 
         # 디버깅용 (필요시 주석 해제)
-        # draw_rectangle(*p.rect, *p.color)
+        if gv.SHOW_DEBUG_RECT:
+            draw_rectangle(*p.rect, *p.color)
+
+        draw_rectangle(*p.rect, *p.color)

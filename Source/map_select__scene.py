@@ -59,6 +59,7 @@ def handle_events():
             if event.button == SDL_BUTTON_LEFT:
                 for card in map_card:
                     card.is_clicked(event.x, event.y)
+                map_sel_btn.is_clicked(event.x, event.y)
 
 def draw():
     clear_canvas()
