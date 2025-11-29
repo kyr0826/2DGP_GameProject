@@ -3,7 +3,7 @@ import game_framework
 from Button import Button
 import Lobby_scene
 import play_scene
-import Global_Variables as gc
+import Global_Variables as gv
 
 name_frame: Image = None
 select_frame: Image = None
@@ -18,13 +18,13 @@ def init():
     global bg, character_images, select_frame, name_frame, play_button
     global font, key_font
     print('character select Init')
-    print(gc.p1_index, gc.p2_index)
+    print(gv.p1_index, gv.p2_index)
     # 초기화
-    gc.selected_characters['player1'] = gc.characters[gc.p1_index]
-    gc.selected_characters['player2'] = gc.characters[gc.p2_index]
+    gv.selected_characters['player1'] = gv.characters[gv.p1_index]
+    gv.selected_characters['player2'] = gv.characters[gv.p2_index]
 
-    gc.p1_selected = False
-    gc.p2_selected = False
+    gv.p1_selected = False
+    gv.p2_selected = False
 
     # 리소스 로드
     bg = load_image('UI/Character_Select_bg.png')
@@ -32,12 +32,12 @@ def init():
     select_frame = load_image('UI/Select_Frame.png')
 
     # 캐릭터 이미지 로드
-    for char in gc.characters:
+    for char in gv.characters:
         character_images.append(load_image(f'{char}/select_face.png'))
 
     font = load_font('ENCR10B.TTF', 24)
     key_font = load_font('ENCR10B.TTF', 15)
-    play_button = Button('Game Play', gc.GAME_WINDOW_WIDTH // 2, 163)
+    play_button = Button('Game Play', gv.GAME_WINDOW_WIDTH // 2, 163)
     play_button.add_event(lambda: game_framework.change_mode(play_scene))
 
 def finish():
@@ -51,23 +51,23 @@ def handle_events():
             game_framework.quit()
 
         elif event.type == SDL_KEYDOWN:
-            if not gc.p1_selected:
+            if not gv.p1_selected:
                 if event.key == SDLK_a:
-                    gc.p1_index = (gc.p1_index - 1) % len(gc.characters)
+                    gv.p1_index = (gv.p1_index - 1) % len(gv.characters)
                 elif event.key == SDLK_d:
-                    gc.p1_index = (gc.p1_index + 1) % len(gc.characters)
+                    gv.p1_index = (gv.p1_index + 1) % len(gv.characters)
                 elif event.key == SDLK_g:
-                    gc.p1_selected = True
-                gc.selected_characters['player1'] = gc.characters[gc.p1_index]
+                    gv.p1_selected = True
+                gv.selected_characters['player1'] = gv.characters[gv.p1_index]
 
-            if not gc.p2_selected:
+            if not gv.p2_selected:
                 if event.key == SDLK_LEFT:
-                    gc.p2_index = (gc.p2_index - 1) % len(gc.characters)
+                    gv.p2_index = (gv.p2_index - 1) % len(gv.characters)
                 elif event.key == SDLK_RIGHT:
-                    gc.p2_index = (gc.p2_index + 1) % len(gc.characters)
+                    gv.p2_index = (gv.p2_index + 1) % len(gv.characters)
                 elif event.key == SDLK_KP_1:
-                    gc.p2_selected = True
-                gc.selected_characters['player2'] = gc.characters[gc.p2_index]
+                    gv.p2_selected = True
+                gv.selected_characters['player2'] = gv.characters[gv.p2_index]
 
             if event.key == SDLK_ESCAPE:
                 game_framework.change_mode(Lobby_scene)
@@ -86,7 +86,7 @@ def draw():
     draw_rectangle(0, 0, 800, 750, 0, 0, 0, 255, True)
 
     # 배경
-    bg.draw(gc.GAME_WINDOW_WIDTH // 2, gc.GAME_WINDOW_HEIGHT // 2, bg.w, bg.h)
+    bg.draw(gv.GAME_WINDOW_WIDTH // 2, gv.GAME_WINDOW_HEIGHT // 2, bg.w, bg.h)
 
     # 캐릭터 카드 그리기
     card_y = 375
@@ -99,14 +99,14 @@ def draw():
     name_y = card_y - card_size / 2 - name_card_spacing
 
     # P1
-    x = gc.GAME_WINDOW_WIDTH // 2 - card_size / 2 - card_spacing
+    x = gv.GAME_WINDOW_WIDTH // 2 - card_size / 2 - card_spacing
     font.draw(x - (len('P1') * 24 * 0.28), card_y + 110, 'P1', (125, 125, 125))
 
     select_frame.draw(x, card_y, card_size, card_size)
-    character_images[gc.p1_index].draw(x, card_y, card_size - 50, card_size - 50)
+    character_images[gv.p1_index].draw(x, card_y, card_size - 50, card_size - 50)
     name_frame.draw(x, name_y, name_w, name_h)
-    font_color = (255, 255, 255) if not gc.p1_selected else (255, 255, 0)
-    font.draw(x - (len(gc.characters[gc.p1_index]) * 24 * 0.28), name_y, gc.characters[gc.p1_index], font_color)
+    font_color = (255, 255, 255) if not gv.p1_selected else (255, 255, 0)
+    font.draw(x - (len(gv.characters[gv.p1_index]) * 24 * 0.28), name_y, gv.characters[gv.p1_index], font_color)
 
     # Key Map
     key_texts = ['[ P1 Controls ]',
@@ -135,26 +135,26 @@ def draw():
         key_font.draw(key_x, key_y - 20 * i, key_texts[i], (125, 125, 125))
 
     # P2
-    x = gc.GAME_WINDOW_WIDTH // 2 + card_size / 2 + card_spacing
+    x = gv.GAME_WINDOW_WIDTH // 2 + card_size / 2 + card_spacing
 
     font.draw(x - (len('P2') * 24 * 0.28), card_y + 110, 'P2', (125, 125, 125))
 
     select_frame.draw(x, card_y, card_size, card_size)
-    character_images[gc.p2_index].draw(x, card_y, card_size - 50, card_size - 50)
+    character_images[gv.p2_index].draw(x, card_y, card_size - 50, card_size - 50)
     name_frame.draw(x, name_y, name_w, name_h)
-    font_color = (255, 255, 255) if not gc.p2_selected else (255, 255, 0)
-    font.draw(x - (len(gc.characters[gc.p2_index]) * 24 * 0.28), name_y, gc.characters[gc.p2_index], font_color)
+    font_color = (255, 255, 255) if not gv.p2_selected else (255, 255, 0)
+    font.draw(x - (len(gv.characters[gv.p2_index]) * 24 * 0.28), name_y, gv.characters[gv.p2_index], font_color)
 
     # 준비 상태 표시
-    if gc.p1_selected:
+    if gv.p1_selected:
         x = 400 - card_size / 2 - card_spacing
         font.draw(x - (len("1P Ready!") * 24 * 0.28), name_y - 35, "1P Ready!", (255, 200, 0))
 
-    if gc.p2_selected:
+    if gv.p2_selected:
         x = 400 + card_size / 2 + card_spacing
         font.draw(x - (len("2P Ready!") * 24 * 0.28), name_y - 35, "2P Ready!", (255, 200, 0))
 
-    play_button.enabled = gc.p1_selected and gc.p2_selected
+    play_button.enabled = gv.p1_selected and gv.p2_selected
     play_button.draw()
 
     update_canvas()
