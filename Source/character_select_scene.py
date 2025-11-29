@@ -2,7 +2,7 @@ from pico2d import *
 import game_framework
 from Button import Button
 import Lobby_scene
-import map_select__scene
+import map_select_scene
 import Global_Variables as gv
 
 name_frame: Image = None
@@ -36,7 +36,7 @@ def init():
     font = load_font('ENCR10B.TTF', 24)
     key_font = load_font('ENCR10B.TTF', 15)
     play_button = Button('Game Play', gv.GAME_WINDOW_WIDTH // 2, 163)
-    play_button.add_event(lambda: game_framework.change_mode(map_select__scene))
+    play_button.add_event(lambda: game_framework.change_mode(map_select_scene))
 
 def finish():
     pass

@@ -1,13 +1,15 @@
 from MapGenerator import *
 from Character import *
 from InputManager import *
-from Source import game_world, character_select_scene
+from Source import game_world
 from Volcano import Volcano
 from Source.CollisionManager import add_collision_pair, add_list_collision_pair, handle_collisions
-import Lobby_scene
 import Global_Variables as gv
 from Player_Info_bar import Player_Info_bar
 from Button import Button
+
+import Lobby_scene
+import map_select_scene
 
 input_mgr = None
 p1_info, p2_info = None, None
@@ -22,8 +24,10 @@ popup_font: Font = None
 retry_btn: Button = None
 exit_btn: Button = None
 
+players = []
+
 def init():
-    global input_mgr, p1_info, p2_info, volcano_rising_timer, volcano
+    global input_mgr, p1_info, p2_info, volcano_rising_timer, volcano, players
 
     global time_frame_img, time_font
     time_frame_img = load_image("UI/Time_Frame.png")
@@ -34,7 +38,7 @@ def init():
     popup_font = load_font("ENCR10B.TTF", size=32)
 
     retry_btn = Button("FightAgain", 0, 0)
-    retry_btn.add_event(lambda: game_framework.change_mode(character_select_scene))
+    retry_btn.add_event(lambda: game_framework.change_mode(map_select_scene))
 
     exit_btn = Button("Exit", 0, 0)
     exit_btn.add_event(lambda: game_framework.change_mode(Lobby_scene))
@@ -122,7 +126,9 @@ def draw_popup():
     if gv.isGameEnd:
         retry_btn.enabled = True
         exit_btn.enabled = True
-        popup_font.draw(popup_x-(len("Winer : ") * 32 * 0.28), popup_y, "Winer : ", (255, 120, 55))
+        winner, winner_idx = (players[0], 1) if players[0].Health != 0 else (players[1], 2)
+        winner_text = f'Winner: P{winner_idx} {winner.name}'
+        popup_font.draw(popup_x-(len(winner_text) * 32 * 0.28), popup_y, winner_text, (255, 120, 55))
 
     retry_btn.x = popup_x - 150
     retry_btn.y = popup_y - popup_bg_img.h//2 + 100
