@@ -1,6 +1,5 @@
 from AnimationSystem import *
 import game_framework
-from Source import Global_Variables
 import Global_Variables as gv
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
