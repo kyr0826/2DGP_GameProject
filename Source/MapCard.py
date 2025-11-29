@@ -34,7 +34,11 @@ class MapCard:
         font_y = self.y + MapCard.map_card_img.h * self.scale * 0.35
         MapCard.map_card_font.draw(self.x - (len(self.map_name) * 22 * 0.28), font_y, self.map_name, self.font_color)
 
-        draw_rectangle(*self.get_bb())
+        map_img_w = map_img_h = 260*self.scale
+        self.map_img.clip_draw(0,0,self.map_img.w,self.map_img.h,self.x, self.y-34*self.scale, map_img_w, map_img_h)
+
+        if gv.SHOW_DEBUG_RECT:
+            draw_rectangle(*self.get_bb())
 
     def is_clicked(self, mx, my):
         card_bb = self.get_bb()
