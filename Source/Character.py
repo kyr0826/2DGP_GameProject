@@ -1,6 +1,6 @@
 from AnimationSystem import *
 import game_framework
-from Source import GameConstants
+from Source import Global_Variables
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 GRAVITY = 9.81

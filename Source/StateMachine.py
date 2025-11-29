@@ -1,5 +1,4 @@
-from Source.GameConstants import isGameEnd
-
+import Global_Variables as gv
 
 class States:
     IDLE = 0
@@ -25,7 +24,7 @@ class StateMachine:
     def update(self):
         c = self.owner
 
-        if isGameEnd:
+        if gv.isGameEnd:
             return
 
         if self.current == States.DEAD:

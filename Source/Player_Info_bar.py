@@ -1,6 +1,6 @@
 from Character import Character
 from pico2d import *
-import GameConstants
+import Global_Variables as gv
 from StateMachine import States
 
 class Player_Info_bar:
@@ -20,17 +20,17 @@ class Player_Info_bar:
             Player_Info_bar.ingame_face_frame = load_image('UI/InGame_Face_Frame.png')
 
         if not Player_Info_bar.character_face_images:
-            for name in GameConstants.characters:
+            for name in gv.characters:
                 Player_Info_bar.character_face_images[name] = load_image(name+'/select_face.png')
 
         if not Player_Info_bar.character_dead_face_images:
-            for name in GameConstants.characters:
+            for name in gv.characters:
                 Player_Info_bar.character_dead_face_images[name] = load_image(name+'/select_face_dead.png')
 
     def draw(self):
         # 선택된 캐릭터 얼굴
-        x = 45 if self.isPlayer1 else GameConstants.GAME_WINDOW_WIDTH - 45
-        y = GameConstants.GAME_WINDOW_HEIGHT - 50
+        x = 45 if self.isPlayer1 else gv.GAME_WINDOW_WIDTH - 45
+        y = gv.GAME_WINDOW_HEIGHT - 50
 
         Player_Info_bar.ingame_face_frame.draw(x,y,80,80)
         if self.owner.Health > 0.0:

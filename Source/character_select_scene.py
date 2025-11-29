@@ -3,7 +3,7 @@ import game_framework
 from Button import Button
 import Lobby_scene
 import play_scene
-import GameConstants as gc
+import Global_Variables as gc
 
 name_frame: Image = None
 select_frame: Image = None

@@ -1,13 +1,12 @@
 from pico2d import Image, load_image, draw_rectangle
 import game_framework
-from Source import GameConstants
-from Source.GameConstants import GAME_WINDOW_WIDTH
+import Global_Variables as gv
 
 
 class Volcano:
     volcano = None
     def __init__(self):
-        self.width = GAME_WINDOW_WIDTH
+        self.width = gv.GAME_WINDOW_WIDTH
         self.height = 0
         self.isLavaRising = False
         self.RISING_SPEED = 5.0
@@ -24,7 +23,7 @@ class Volcano:
 
     def update(self):
 
-        if not GameConstants.isGameEnd and self.isLavaRising:
+        if not gv.isGameEnd and self.isLavaRising:
             self.height += self.RISING_SPEED * game_framework.frame_time
             if self.height > self.tex_h:
                 self.height = self.tex_h

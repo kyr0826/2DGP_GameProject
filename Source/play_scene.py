@@ -1,11 +1,11 @@
 from MapGenerator import *
 from Character import *
 from InputManager import *
-from Source import game_world, GameConstants, character_select_scene
+from Source import game_world, character_select_scene
 from Volcano import Volcano
 from Source.CollisionManager import add_collision_pair, add_list_collision_pair, handle_collisions
 import Lobby_scene
-from GameConstants import *
+import Global_Variables as gv
 from Player_Info_bar import Player_Info_bar
 from Button import Button
 
@@ -39,18 +39,18 @@ def init():
     exit_btn = Button("Exit", 0, 0)
     exit_btn.add_event(lambda: game_framework.change_mode(Lobby_scene))
 
-    volcano_rising_timer = Volcano_rising_wait_time
+    volcano_rising_timer = gv.Volcano_rising_wait_time
     init_map()
 
     input_mgr = InputManager()
 
-    player1 = Character(selected_characters['player1'], 300, 300, input_mgr,
+    player1 = Character(gv.selected_characters['player1'], 300, 300, input_mgr,
                         {'left': SDLK_a, 'right': SDLK_d, 'jump': SDLK_w, 'down': SDLK_s,
                          'attack': SDLK_g, 'defense': SDLK_h, 'parrying': SDLK_j})
 
     p1_info = Player_Info_bar(player1, True)
 
-    player2 = Character(selected_characters['player2'], 500, 300, input_mgr,
+    player2 = Character(gv.selected_characters['player2'], 500, 300, input_mgr,
                         {'left': SDLK_LEFT, 'right': SDLK_RIGHT, 'jump': SDLK_UP, 'down': SDLK_DOWN,
                          'attack': SDLK_KP_1, 'defense': SDLK_KP_2, 'parrying': SDLK_KP_3})
 
@@ -81,8 +81,8 @@ def finish():
     global collision_pairs, volcano
     game_world.clear()
     collision_pairs = {}
-    GameConstants.isGameEnd = False
-    GameConstants.isGamePaused = False
+    gv.isGameEnd = False
+    gv.isGamePaused = False
     game_framework.set_time_scale(1.0)
 
 def handle_events():
@@ -95,10 +95,10 @@ def handle_events():
             game_framework.quit()
 
         elif event.type == SDL_KEYDOWN:
-            if event.key == SDLK_ESCAPE and not GameConstants.isGameEnd:
-                GameConstants.isGamePaused = not GameConstants.isGamePaused
+            if event.key == SDLK_ESCAPE and not gv.isGameEnd:
+                gv.isGamePaused = not gv.isGamePaused
                 global retry_btn, exit_btn
-                if GameConstants.isGamePaused:
+                if gv.isGamePaused:
                     retry_btn.enabled = True
                     exit_btn.enabled = True
                     game_framework.set_time_scale(0.0)
@@ -113,12 +113,12 @@ def handle_events():
 
 def draw_popup():
     global popup_bg_img, popup_font, retry_btn, exit_btn
-    popup_x = GAME_WINDOW_WIDTH // 2
-    popup_y = GAME_WINDOW_HEIGHT // 2 - 30
+    popup_x = gv.GAME_WINDOW_WIDTH // 2
+    popup_y = gv.GAME_WINDOW_HEIGHT // 2 - 30
 
     popup_bg_img.draw(popup_x, popup_y)
 
-    if GameConstants.isGameEnd:
+    if gv.isGameEnd:
         retry_btn.enabled = True
         exit_btn.enabled = True
         popup_font.draw(popup_x-(len("Winer : ") * 32 * 0.28), popup_y, "Winer : ", (255, 120, 55))
@@ -147,8 +147,8 @@ def draw():
     time_frame_w = 140
     time_frame_h = 40
 
-    time_frame_x = GAME_WINDOW_WIDTH // 2
-    time_frame_y = GAME_WINDOW_HEIGHT - time_frame_h // 2 - 6
+    time_frame_x = gv.GAME_WINDOW_WIDTH // 2
+    time_frame_y = gv.GAME_WINDOW_HEIGHT - time_frame_h // 2 - 6
 
     time_frame_img.draw(time_frame_x, time_frame_y, time_frame_w, time_frame_h)
     minutes = int(volcano_rising_timer // 60)
@@ -156,7 +156,7 @@ def draw():
     time_text = f"{minutes:02d}:{seconds:02d}"
     time_font.draw(time_frame_x - (len(time_text) * 24 * 0.28), time_frame_y, time_text, (255, 125, 0))
 
-    if GameConstants.isGamePaused or GameConstants.isGameEnd:
+    if gv.isGamePaused or gv.isGameEnd:
         draw_popup()
 
     update_canvas()

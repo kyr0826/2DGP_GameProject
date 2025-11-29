@@ -1,5 +1,5 @@
 from pico2d import *
-from Source import GameConstants
+from Source import Global_Variables
 
 class Button:
     btn_enable_img: Image = None

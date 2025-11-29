@@ -14,6 +14,9 @@ p2_index = 0
 p1_selected = False
 p2_selected = False
 
+map_idx = 0
+map_selected = False
+
 Volcano_rising_wait_time = 10.0
 
 isGameEnd = False
