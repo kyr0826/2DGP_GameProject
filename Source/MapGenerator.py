@@ -6,6 +6,9 @@ import GameConstants as gc
 # type ground (통과 불가) one-way (아래에서 위로 통과 가능)
 PlatformData = namedtuple('PlatformData', ['rect', 'color', 'type'])
 
+ingame_bg = None
+platform_img = None
+
 platforms = []
 
 
@@ -103,6 +106,13 @@ def init_map(map_type=1):
     global platforms
     platforms.clear()
 
+    global ingame_bg, platform_img
+    if ingame_bg is None:
+        ingame_bg = load_image('UI/InGame_bg.png')
+
+    if platform_img is None:
+        platform_img = load_image('UI/platform.png')
+
     if map_type == 1:
         init_map_pyramid()
 
@@ -181,5 +191,106 @@ def get_platforms():
 
 
 def draw_map():
+    global ingame_bg, platform_img
+    w = gc.GAME_WINDOW_WIDTH
+    h = gc.GAME_WINDOW_HEIGHT
+
+    ingame_bg.draw(w // 2, h // 2, w, h)
+
+    # ------------------------------------------------------------------
+    # [설정값 조정] 이 수치들을 조절하여 자연스러운 타일링을 만드세요.
+    # ------------------------------------------------------------------
+    IMG_W = platform_img.w  # 616
+    IMG_H = platform_img.h  # 189
+
+    # 1. 전체 크기 배율 (0.3 ~ 0.5 추천)
+    DRAW_SCALE = 0.4
+
+    # 2. 양쪽 끝(Cap)으로 사용할 원본 이미지 너비
+    SRC_MARGIN = 30
+
+    # 3. [핵심] 가운데 반복될 블록 패턴의 원본 너비
+    # 이 값을 조절하면 "벽돌이 몇 개 쌓인 느낌인지" 결정됩니다.
+    SRC_TILE_WIDTH = 120
+
+    # ------------------------------------------------------------------
+    # [자동 계산] 여기서부터는 위 설정값에 따라 자동으로 계산됩니다.
+    # ------------------------------------------------------------------
+    # 화면에 그려질 실제 사이즈들
+    DST_MARGIN = int(SRC_MARGIN * DRAW_SCALE)  # 화면상 캡 너비
+    DST_TILE_WIDTH = int(SRC_TILE_WIDTH * DRAW_SCALE)  # 화면상 타일 1개 너비
+    DST_HEIGHT = int(IMG_H * DRAW_SCALE)  # 화면상 높이
+
     for p in platforms:
-        draw_rectangle(*p.rect, *p.color, filled=True)
+        # 바닥(ground) 타입은 그리지 않고 건너뜀 (요청사항 반영)
+        if p.type == 'ground': continue
+
+        pl, pb, pr, pt = p.rect
+        platform_width = pr - pl
+
+        # 그리기 중심 Y좌표 (Top 기준 정렬)
+        cy = pt - (DST_HEIGHT // 2)
+
+        # -----------------------------------------------------
+        # Case A: 발판이 충분히 넓을 때 (3-Slice + Tiling 적용)
+        # -----------------------------------------------------
+        if platform_width > DST_MARGIN * 2:
+
+            # 1. 왼쪽 끝 (Left Cap) 그리기
+            # 위치: 왼쪽 끝에서 캡의 절반만큼 오른쪽
+            platform_img.clip_draw(
+                0, 0, SRC_MARGIN, IMG_H,
+                pl + (DST_MARGIN // 2), cy,
+                DST_MARGIN, DST_HEIGHT
+            )
+
+            # 2. 오른쪽 끝 (Right Cap) 그리기
+            # 위치: 오른쪽 끝에서 캡의 절반만큼 왼쪽
+            platform_img.clip_draw(
+                IMG_W - SRC_MARGIN, 0, SRC_MARGIN, IMG_H,
+                pr - (DST_MARGIN // 2), cy,
+                DST_MARGIN, DST_HEIGHT
+            )
+
+            # 3. 가운데 (Center) - [반복 채우기 로직]
+
+            # 가운데 채워야 할 총 공간의 너비
+            fill_width = platform_width - (DST_MARGIN * 2)
+
+            # 시작 x좌표 (왼쪽 캡 바로 다음)
+            start_x = pl + DST_MARGIN
+
+            # 현재까지 그린 너비
+            current_drawn_w = 0
+
+            # 공간이 남은 동안 계속 타일(블록)을 그립니다.
+            while current_drawn_w < fill_width:
+                # 이번에 그릴 타일의 너비 결정 (기본은 DST_TILE_WIDTH)
+                # 남은 공간이 타일 1개보다 작으면 남은 만큼만 그림 (자투리 처리)
+                remaining_w = fill_width - current_drawn_w
+                draw_w = min(DST_TILE_WIDTH, remaining_w)
+
+                # 원본에서 가져올 너비 (비율 역계산)
+                src_w = int(draw_w / DRAW_SCALE)
+
+                # 그릴 위치 (중심점 기준이므로 반지름만큼 이동)
+                draw_x = start_x + current_drawn_w + (draw_w / 2)
+
+                # 타일 그리기 (가운데 소스 이미지의 앞부분을 계속 가져옴)
+                # 소스 위치: SRC_MARGIN (왼쪽 캡 끝난 지점) 부터
+                platform_img.clip_draw(
+                    SRC_MARGIN, 0, src_w, IMG_H,  # 소스
+                    draw_x, cy,  # 화면 위치
+                    draw_w, DST_HEIGHT  # 화면 크기
+                )
+
+                current_drawn_w += draw_w
+
+        else:
+            platform_img.draw(
+                pl + platform_width // 2, cy,
+                platform_width, DST_HEIGHT
+            )
+
+        # 디버깅용 (필요시 주석 해제)
+        draw_rectangle(*p.rect, *p.color)
