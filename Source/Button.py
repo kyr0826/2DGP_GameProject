@@ -1,5 +1,5 @@
 from pico2d import *
-from Source import Global_Variables
+import Global_Variables as gv
 
 class Button:
     btn_enable_img: Image = None
@@ -41,7 +41,7 @@ class Button:
                                  (125, 125, 125))
 
         # 클릭범위 확인용
-        if GameConstants.SHOW_DEBUG_RECT:
+        if gv.SHOW_DEBUG_RECT:
             draw_rectangle(*self.get_bb())
 
     def is_clicked(self, mx, my):
