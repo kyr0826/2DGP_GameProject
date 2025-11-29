@@ -1,6 +1,6 @@
 from pico2d import *
 from collections import namedtuple
-import GameConstants
+import GameConstants as gc
 
 # 플랫폼 데이터를 저장할 구조체 정의 (사각형, 색상, 타입)
 # type ground (통과 불가) one-way (아래에서 위로 통과 가능)
@@ -13,8 +13,8 @@ def init_map_pyramid():
     global platforms
     platforms.clear()
 
-    platforms.append(PlatformData((0, 0, 800, 60), (100, 255, 100, 1), 'ground'))
-    center = GameConstants.GAME_WINDOW_WIDTH // 2
+    platforms.append(PlatformData((0, 0, 800, 70), (100, 255, 100, 1), 'ground'))
+    center = gc.GAME_WINDOW_WIDTH // 2
 
     width = 700
     left = center - width // 2
@@ -39,7 +39,7 @@ def init_map_towers():
     global platforms
     platforms.clear()
 
-    W = GameConstants.GAME_WINDOW_WIDTH
+    W = gc.GAME_WINDOW_WIDTH
     CENTER = W // 2
 
     # 탑 설정
@@ -71,7 +71,7 @@ def init_map_islands():
     global platforms
     platforms.clear()
 
-    W = GameConstants.GAME_WINDOW_WIDTH
+    W = gc.GAME_WINDOW_WIDTH
     CENTER = W // 2
     SIDE_MARGIN = 50
 
