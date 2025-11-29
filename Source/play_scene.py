@@ -58,6 +58,9 @@ def init():
 
     if volcano is None:
         volcano = Volcano()
+    volcano.isLavaRising = False
+    volcano.height = 0
+
     game_world.add_object(volcano, 1)
 
     players = [player1, player2]
@@ -81,7 +84,6 @@ def finish():
     GameConstants.isGameEnd = False
     GameConstants.isGamePaused = False
     game_framework.set_time_scale(1.0)
-    volcano.height = 0
 
 def handle_events():
     global retry_btn, exit_btn
