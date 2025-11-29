@@ -7,7 +7,47 @@ PlatformData = namedtuple('PlatformData', ['rect', 'color', 'type'])
 
 platforms = []
 
-def init_map():
+def init_map_coliseum():
+    pass
+
+def init_map_double_decker():
+    pass
+
+def init_map_canyon():
+    pass
+
+def init_map_pyramid():
+    pass
+
+def init_map_towers():
+    pass
+
+def init_map_islands():
+    pass
+
+def init_map(map_type=1):
+    global platforms
+    platforms.clear()
+
+    if map_type == 1:
+        init_map_coliseum()
+
+    elif map_type == 2:
+        init_map_double_decker()
+
+    elif map_type == 3:
+        init_map_canyon()
+
+    elif map_type == 4:
+        init_map_pyramid()
+
+    elif map_type == 5:
+        init_map_towers()
+
+    elif map_type == 6:
+        init_map_islands()
+
+def init_map_old():
     global platforms
     platforms.clear() # 맵 초기화
 
