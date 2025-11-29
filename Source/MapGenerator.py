@@ -1,14 +1,13 @@
 from pico2d import *
 from collections import namedtuple
-import GameConstants as gc
+import Global_Variables as gv
 
 # 플랫폼 데이터를 저장할 구조체 정의 (사각형, 색상, 타입)
 # type ground (통과 불가) one-way (아래에서 위로 통과 가능)
 PlatformData = namedtuple('PlatformData', ['rect', 'color', 'type'])
 
-ingame_bg = None
-platform_img = None
-
+ingame_bgs = []
+platform_imgs = []
 platforms = []
 
 
@@ -16,8 +15,8 @@ def init_map_pyramid():
     global platforms
     platforms.clear()
 
-    platforms.append(PlatformData((0, 0, 800, 70), (100, 255, 100, 1), 'ground'))
-    center = gc.GAME_WINDOW_WIDTH // 2
+    platforms.append(PlatformData((0, 0, 800, 50), (100, 255, 100, 1), 'ground'))
+    center = gv.GAME_WINDOW_WIDTH // 2
 
     width = 700
     left = center - width // 2
@@ -42,7 +41,7 @@ def init_map_towers():
     global platforms
     platforms.clear()
 
-    W = gc.GAME_WINDOW_WIDTH
+    W = gv.GAME_WINDOW_WIDTH
     CENTER = W // 2
 
     # 탑 설정
@@ -74,7 +73,7 @@ def init_map_islands():
     global platforms
     platforms.clear()
 
-    W = gc.GAME_WINDOW_WIDTH
+    W = gv.GAME_WINDOW_WIDTH
     CENTER = W // 2
     SIDE_MARGIN = 50
 
@@ -106,12 +105,15 @@ def init_map(map_type=1):
     global platforms
     platforms.clear()
 
-    global ingame_bg, platform_img
-    if ingame_bg is None:
-        ingame_bg = load_image('UI/InGame_bg.png')
+    global ingame_bgs, platform_imgs
+    if not ingame_bgs:
+        for i in range(3):
+            ingame_bgs.append(load_image(f'UI/InGame_bg_{i + 1}.png'))
+    if not platform_imgs:
+        for i in range(3):
+            platform_imgs.append(load_image(f'UI/platform_{i + 1}.png'))
 
-    if platform_img is None:
-        platform_img = load_image('UI/platform.png')
+    gv.map_idx = map_type - 1
 
     if map_type == 1:
         init_map_pyramid()
@@ -191,27 +193,30 @@ def get_platforms():
 
 
 def draw_map():
-    global ingame_bg, platform_img
-    w = gc.GAME_WINDOW_WIDTH
-    h = gc.GAME_WINDOW_HEIGHT
+    global ingame_bgs, platform_imgs
+    w = gv.GAME_WINDOW_WIDTH
+    h = gv.GAME_WINDOW_HEIGHT
 
-    ingame_bg.draw(w // 2, h // 2, w, h)
+    selected_bg = ingame_bgs[gv.map_idx]
+    selected_platform_img = platform_imgs[gv.map_idx]
+
+    selected_bg.draw(w // 2, h // 2, w, h)
 
     # ------------------------------------------------------------------
     # [설정값 조정] 이 수치들을 조절하여 자연스러운 타일링을 만드세요.
     # ------------------------------------------------------------------
-    IMG_W = platform_img.w  # 616
-    IMG_H = platform_img.h  # 189
+    IMG_W = selected_platform_img.w  # 616
+    IMG_H = selected_platform_img.h  # 189
 
     # 1. 전체 크기 배율 (0.3 ~ 0.5 추천)
     DRAW_SCALE = 0.4
 
     # 2. 양쪽 끝(Cap)으로 사용할 원본 이미지 너비
-    SRC_MARGIN = 30
+    SRC_MARGIN = 108
 
     # 3. [핵심] 가운데 반복될 블록 패턴의 원본 너비
     # 이 값을 조절하면 "벽돌이 몇 개 쌓인 느낌인지" 결정됩니다.
-    SRC_TILE_WIDTH = 120
+    SRC_TILE_WIDTH = 400
 
     # ------------------------------------------------------------------
     # [자동 계산] 여기서부터는 위 설정값에 따라 자동으로 계산됩니다.
@@ -227,7 +232,7 @@ def draw_map():
 
         pl, pb, pr, pt = p.rect
         platform_width = pr - pl
-
+        feet_offset = 5
         # 그리기 중심 Y좌표 (Top 기준 정렬)
         cy = pt - (DST_HEIGHT // 2)
 
@@ -238,17 +243,17 @@ def draw_map():
 
             # 1. 왼쪽 끝 (Left Cap) 그리기
             # 위치: 왼쪽 끝에서 캡의 절반만큼 오른쪽
-            platform_img.clip_draw(
+            selected_platform_img.clip_draw(
                 0, 0, SRC_MARGIN, IMG_H,
-                pl + (DST_MARGIN // 2), cy,
+                pl + (DST_MARGIN // 2), cy + feet_offset,
                 DST_MARGIN, DST_HEIGHT
             )
 
             # 2. 오른쪽 끝 (Right Cap) 그리기
             # 위치: 오른쪽 끝에서 캡의 절반만큼 왼쪽
-            platform_img.clip_draw(
+            selected_platform_img.clip_draw(
                 IMG_W - SRC_MARGIN, 0, SRC_MARGIN, IMG_H,
-                pr - (DST_MARGIN // 2), cy,
+                pr - (DST_MARGIN // 2), cy + feet_offset,
                 DST_MARGIN, DST_HEIGHT
             )
 
@@ -278,19 +283,19 @@ def draw_map():
 
                 # 타일 그리기 (가운데 소스 이미지의 앞부분을 계속 가져옴)
                 # 소스 위치: SRC_MARGIN (왼쪽 캡 끝난 지점) 부터
-                platform_img.clip_draw(
+                selected_platform_img.clip_draw(
                     SRC_MARGIN, 0, src_w, IMG_H,  # 소스
-                    draw_x, cy,  # 화면 위치
+                    draw_x, cy+feet_offset,  # 화면 위치
                     draw_w, DST_HEIGHT  # 화면 크기
                 )
 
                 current_drawn_w += draw_w
 
         else:
-            platform_img.draw(
+            selected_platform_img.draw(
                 pl + platform_width // 2, cy,
                 platform_width, DST_HEIGHT
             )
 
         # 디버깅용 (필요시 주석 해제)
-        draw_rectangle(*p.rect, *p.color)
+        # draw_rectangle(*p.rect, *p.color)
