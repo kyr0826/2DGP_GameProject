@@ -1,6 +1,7 @@
 from AnimationSystem import *
 import game_framework
 from Source import Global_Variables
+import Global_Variables as gv
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 GRAVITY = 9.81
@@ -116,10 +117,10 @@ class Character:
     def update(self):
         delta_time = game_framework.frame_time
 
-        if GameConstants.isGamePaused:
+        if gv.isGamePaused:
             return
 
-        if GameConstants.isGameEnd:
+        if gv.isGameEnd:
             self.animator.update(delta_time)
             if self.Health > 0:
                 if self.state_machine.current is not States.IDLE:
@@ -234,7 +235,7 @@ class Character:
             self.animator.isBlinking = False
             self.animator.isVisible = True
             self.state_machine.change(States.DEAD)
-            GameConstants.isGameEnd = True
+            gv.isGameEnd = True
             return
 
         if group == 'player:volcano':
@@ -363,7 +364,7 @@ class Character:
     def draw(self):
         self.animator.draw_current_frame()
 
-        if GameConstants.SHOW_DEBUG_RECT:
+        if gv.SHOW_DEBUG_RECT:
             draw_rectangle(*self.get_bb(),0,255,150,1)
             draw_rectangle(*self.get_foot_bb(),255,255,0,1)
 
