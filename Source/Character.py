@@ -26,7 +26,7 @@ class Character:
         self.MAX_JUMP_SPEED = PIXEL_PER_METER * 20.0
 
         self.isBrakingJump = False
-        self.JUMP_BREAK_FACTOR = 10.0
+        self.JUMP_BREAK_FACTOR = 20.0
 
         self.is_dropping_down = False
         self.just_landed = False
