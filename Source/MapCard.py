@@ -7,15 +7,14 @@ class MapCard:
     map_card_highlight_img: Image = None
     map_card_font: Font = None
 
-    def __init__(self, map_name, map_num, x, y, font_color=(255, 125, 0), scale=1, highlight=False):
+    def __init__(self, map_name, map_num, x, y, font_color=(255, 225, 125), scale=1):
         self.map_name = map_name
         self.map_num = map_num
         self.x, self.y = x, y
         self.font_color = font_color
         self.scale = 0.7 * scale
-        self.highlight = highlight
         self.click_events = []
-        self.font_size = int(26 * scale)
+        self.font_size = int(22 * scale)
         self.map_img = load_image(f'UI/InGame_bg_{map_num}.png')
 
         if not MapCard.map_card_img:
@@ -25,10 +24,27 @@ class MapCard:
         if not MapCard.map_card_font:
             MapCard.map_card_font = load_font('ENCR10B.TTF', self.font_size)
 
-    def draw(self): pass
+    def draw(self):
+        if gv.map_idx == self.map_num:
+            MapCard.map_card_highlight_img.draw(self.x, self.y, MapCard.map_card_highlight_img.w * self.scale,
+                                                MapCard.map_card_highlight_img.h * self.scale)
+        MapCard.map_card_img.draw(self.x, self.y, MapCard.map_card_img.w * self.scale,
+                                  MapCard.map_card_img.h * self.scale)
 
-    def is_clicked(self, mx, my): pass
+        font_y = self.y + MapCard.map_card_img.h * self.scale * 0.35
+        MapCard.map_card_font.draw(self.x - (len(self.map_name) * 22 * 0.28), font_y, self.map_name, self.font_color)
 
-    def add_event(self, event): pass
+        draw_rectangle(*self.get_bb())
 
-    def get_bb(self): pass
+    def is_clicked(self, mx, my):
+        card_bb = self.get_bb()
+        if ((card_bb[0] <= mx <= card_bb[2]) and
+            (card_bb[1] <= (get_canvas_height() - my) <= card_bb[3])):
+            gv.map_idx = self.map_num
+
+    def get_bb(self):
+        card_w = int(MapCard.map_card_img.w * self.scale)
+        card_h = int(MapCard.map_card_img.h * self.scale)
+
+        return (self.x - card_w / 2, self.y - card_h / 2,
+                self.x + card_w / 2, self.y + card_h / 2)
