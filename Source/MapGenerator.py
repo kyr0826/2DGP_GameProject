@@ -108,10 +108,10 @@ def init_map(map_type=1):
     global ingame_bgs, platform_imgs
     if not ingame_bgs:
         for i in range(3):
-            ingame_bgs.append(load_image(f'UI/InGame_bg_{i + 1}.png'))
+            ingame_bgs.append(load_image(f'UI/InGame_bg_{i}.png'))
     if not platform_imgs:
         for i in range(3):
-            platform_imgs.append(load_image(f'UI/platform_{i + 1}.png'))
+            platform_imgs.append(load_image(f'UI/platform_{i}.png'))
 
     gv.map_idx = map_type - 1
 
