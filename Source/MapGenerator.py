@@ -101,7 +101,7 @@ def init_map_islands():
     platforms.append(PlatformData((W - SIDE_MARGIN - width, 585, W - SIDE_MARGIN, 615), (255, 100, 100, 1), 'one-way'))
 
 
-def init_map(map_type=1):
+def init_map(map_type=0):
     global platforms
     platforms.clear()
 
@@ -113,15 +113,13 @@ def init_map(map_type=1):
         for i in range(3):
             platform_imgs.append(load_image(f'UI/platform_{i}.png'))
 
-    gv.map_idx = map_type - 1
-
-    if map_type == 1:
+    if map_type == 0:
         init_map_pyramid()
 
-    elif map_type == 2:
+    elif map_type == 1:
         init_map_towers()
 
-    elif map_type == 3:
+    elif map_type == 2:
         init_map_islands()
 
 
