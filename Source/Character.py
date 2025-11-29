@@ -29,6 +29,7 @@ class Character:
         self.JUMP_BREAK_FACTOR = 20.0
 
         self.is_dropping_down = False
+        self.dropping_timer = 0.0
         self.just_landed = False
 
         self.PARRY_COOLDOWN = 1.0
@@ -143,6 +144,12 @@ class Character:
         if self.stun_timer > 0:
             self.stun_timer -= delta_time
 
+        if self.dropping_timer > 0:
+            self.dropping_timer -= delta_time
+            if self.dropping_timer <= 0:
+                self.dropping_timer = 0
+                self.is_dropping_down = False
+
         if self.state_machine.current == States.STUN:
             self.x_speed = 0
             if self.stun_timer <= 0:
@@ -158,6 +165,7 @@ class Character:
             self.useShield = self.input_mgr.get_key_down(self.controls['defense'])
 
             if self.just_landed and self.input_mgr.get_key_press(self.controls['down']):
+                self.dropping_timer = 0.3
                 self.is_dropping_down = True
                 self.isGrounded = False
 
@@ -243,13 +251,7 @@ class Character:
             is_oneway = other.type == 'one-way'
 
             if is_oneway and self.is_dropping_down:
-                my_foot = self.get_bb()[1]
-                platform_bottom = other.rect[1]
-
-                if my_foot < platform_bottom:
-                    self.is_dropping_down = False
-                else:
-                    return
+                return
 
             platform_rect = other.rect
             platform_top = platform_rect[3]
