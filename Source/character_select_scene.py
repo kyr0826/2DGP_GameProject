@@ -4,6 +4,7 @@ from Button import Button
 import Lobby_scene
 import map_select_scene
 import Global_Variables as gv
+import GameSounds as gs
 
 name_frame: Image = None
 select_frame: Image = None
@@ -15,6 +16,8 @@ key_font: Font = None
 play_button: Button = None
 
 def init():
+    gs.play_title_bgm()
+
     global bg, character_images, select_frame, name_frame, play_button
     global font, key_font
     # 초기화
@@ -38,9 +41,7 @@ def init():
     play_button = Button('Game Play', gv.GAME_WINDOW_WIDTH // 2, 163)
     play_button.add_event(lambda: game_framework.change_mode(map_select_scene))
 
-def finish():
-    pass
-
+def finish(): pass
 
 def handle_events():
     events = get_events()

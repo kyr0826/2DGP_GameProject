@@ -5,6 +5,7 @@ from Button import Button
 from MapCard import MapCard
 import play_scene
 import character_select_scene
+import GameSounds as gs
 
 bg_img: Image = None
 title_font: Font = None
@@ -14,6 +15,7 @@ map_sel_btn: Button = None
 map_card = []
 
 def init():
+    gs.play_title_bgm()
     global bg_img, title_font, map_sel_btn
     bg_img = load_image('UI/Map_Select_bg.png')
     title_font = load_font('ENCR10B.TTF', 48)

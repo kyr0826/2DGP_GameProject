@@ -3,12 +3,14 @@ import game_framework
 import character_select_scene
 from Button import Button
 import Global_Variables as gv
+import GameSounds as gs
 
 bg: Image = None
 font: Font = None
 start_button:Button = None
 
 def init():
+    gs.play_title_bgm()
     global bg, font, start_button
     bg = load_image('UI/Game_Title_bg.png')
     font = load_font('ENCR10B.TTF',32)
