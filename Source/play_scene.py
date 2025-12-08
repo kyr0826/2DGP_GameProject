@@ -1,3 +1,4 @@
+import pico2d
 from MapGenerator import *
 from Character import *
 from InputManager import *
@@ -10,6 +11,8 @@ from Button import Button
 
 import Lobby_scene
 import map_select_scene
+
+import GameSounds as gs
 
 input_mgr = None
 p1_info, p2_info = None, None
@@ -27,6 +30,7 @@ exit_btn: Button = None
 players = []
 
 def init():
+    gs.play_ingame_bgm()
     global input_mgr, p1_info, p2_info, volcano_rising_timer, volcano, players
 
     global time_frame_img, time_font
@@ -104,10 +108,12 @@ def handle_events():
                 gv.isGamePaused = not gv.isGamePaused
                 global retry_btn, exit_btn
                 if gv.isGamePaused:
+                    gs.ingame_bgm.pause()
                     retry_btn.enabled = True
                     exit_btn.enabled = True
                     game_framework.set_time_scale(0.0)
                 else:
+                    gs.ingame_bgm.resume()
                     retry_btn.enabled = False
                     exit_btn.enabled = False
                     game_framework.set_time_scale(1.0)
