@@ -1,5 +1,6 @@
 from pico2d import *
 import Global_Variables as gv
+import GameSounds as gs
 
 class Button:
     btn_enable_img: Image = None
@@ -49,6 +50,7 @@ class Button:
         if (self.enabled and
                 (btn_bb[0] <= mx <= btn_bb[2]) and
                 (btn_bb[1] <= (get_canvas_height() - my) <= btn_bb[3])):
+            gs.button_sound.play()
             self.play_events()
 
     def add_event(self, event):
