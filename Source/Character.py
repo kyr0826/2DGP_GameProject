@@ -1,6 +1,7 @@
 from AnimationSystem import *
 import game_framework
 import Global_Variables as gv
+import GameSounds as gs
 
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30 cm
 GRAVITY = 9.81
@@ -123,6 +124,7 @@ class Character:
             self.animator.update(delta_time)
             if self.Health > 0:
                 if self.state_machine.current is not States.IDLE:
+                    gs.game_end_sound.play()
                     self.state_machine.change(States.IDLE)
             return
 
@@ -237,6 +239,7 @@ class Character:
             gv.isGameEnd = True
             return
 
+        gs.hit_sound.play()
         if group == 'player:volcano':
             self.invincible_timer = self.INVINCIBLE_DURATION_Volcano
             self.animator.isBlinking = True

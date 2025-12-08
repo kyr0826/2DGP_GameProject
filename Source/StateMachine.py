@@ -1,4 +1,5 @@
 import Global_Variables as gv
+import GameSounds as gs
 
 class States:
     IDLE = 0
@@ -41,6 +42,9 @@ class StateMachine:
             return
 
         if self.current == States.ATTACK or self.current == States.PARRYING:
+            if self.current == States.ATTACK and c.animator.current.time == 0:
+                gs.attack_sounds[self.owner.name].play()
+
             if c.animator.current.isEnd:
                 self.change(States.IDLE)
             return
