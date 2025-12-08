@@ -53,19 +53,25 @@ def handle_events():
             if not gv.p1_selected:
                 if event.key == SDLK_a:
                     gv.p1_index = (gv.p1_index - 1) % len(gv.characters)
+                    gs.selector_move_sound.play()
                 elif event.key == SDLK_d:
                     gv.p1_index = (gv.p1_index + 1) % len(gv.characters)
+                    gs.selector_move_sound.play()
                 elif event.key == SDLK_g:
                     gv.p1_selected = True
+                    gs.selected_sound.play()
                 gv.selected_characters['player1'] = gv.characters[gv.p1_index]
 
             if not gv.p2_selected:
                 if event.key == SDLK_LEFT:
                     gv.p2_index = (gv.p2_index - 1) % len(gv.characters)
+                    gs.selector_move_sound.play()
                 elif event.key == SDLK_RIGHT:
                     gv.p2_index = (gv.p2_index + 1) % len(gv.characters)
+                    gs.selector_move_sound.play()
                 elif event.key == SDLK_KP_1:
                     gv.p2_selected = True
+                    gs.selected_sound.play()
                 gv.selected_characters['player2'] = gv.characters[gv.p2_index]
 
             if event.key == SDLK_ESCAPE:

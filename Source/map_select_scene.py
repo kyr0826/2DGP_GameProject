@@ -59,6 +59,7 @@ def handle_events():
 
         if event.type == SDL_MOUSEBUTTONDOWN:
             if event.button == SDL_BUTTON_LEFT:
+                gs.selected_sound.play()
                 for card in map_card:
                     card.is_clicked(event.x, event.y)
                 map_sel_btn.is_clicked(event.x, event.y)
