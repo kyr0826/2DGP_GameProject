@@ -9,7 +9,7 @@ class Volcano:
         self.width = gv.GAME_WINDOW_WIDTH
         self.height = 0
         self.isLavaRising = False
-        self.RISING_SPEED = 5.0
+        self.RISING_SPEED = 2.5
 
         self.flow_speed = 60.0
         self.scroll = 0.0
