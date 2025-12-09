@@ -298,5 +298,3 @@ def draw_map():
         # 디버깅용 (필요시 주석 해제)
         if gv.SHOW_DEBUG_RECT:
             draw_rectangle(*p.rect, *p.color)
-
-        draw_rectangle(*p.rect, *p.color)
