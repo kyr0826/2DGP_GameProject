@@ -4,7 +4,7 @@ from Character import *
 from InputManager import *
 from Source import game_world
 from Volcano import Volcano
-from Source.CollisionManager import add_collision_pair, add_list_collision_pair, handle_collisions
+from CollisionManager import add_collision_pair, add_list_collision_pair, handle_collisions
 import Global_Variables as gv
 from Player_Info_bar import Player_Info_bar
 from Button import Button
