@@ -2,7 +2,7 @@ import pico2d
 from MapGenerator import *
 from Character import *
 from InputManager import *
-from Source import game_world
+import game_world
 from Volcano import Volcano
 from CollisionManager import add_collision_pair, add_list_collision_pair, handle_collisions
 import Global_Variables as gv
